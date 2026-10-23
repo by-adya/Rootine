@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Garden - Nurture Your Daily Routines</title>
+  
+  <!-- Google Fonts: Inter & Outfit for modern, clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Header: Title, Today's Date, and Tagline -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🌱</span>
+        <h1>Habit Garden</h1>
+      </div>
+      <p id="current-date" class="current-date" aria-live="polite">Loading today's date...</p>
+      <p class="tagline">Nurture small daily actions into lifelong growth.</p>
+    </header>
+
+    <!-- Main Application Container -->
+    <main class="app-content">
+      <!-- Notification/Alert Banner for User Feedback -->
+      <div id="alert-banner" class="alert-banner hidden" role="status" aria-live="polite"></div>
+
+      <!-- Today's Progress Card -->
+      <section class="card progress-card" aria-labelledby="progress-title">
+        <div class="card-header">
+          <h2 id="progress-title">Today's Progress</h2>
+          <span id="progress-percent" class="progress-badge">0%</span>
+        </div>
+
+        <div class="progress-details">
+          <span id="progress-count" class="progress-count">0 of 0 done</span>
+          <p id="progress-quote" class="progress-quote">Every journey begins with a single seed.</p>
+        </div>
+
+        <!-- Visual Progress Bar -->
+        <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+        </div>
+      </section>
+
+      <!-- Add New Habit Form Card -->
+      <section class="card form-card" aria-labelledby="add-habit-title">
+        <h2 id="add-habit-title" class="sr-only">Add a New Habit</h2>
+        <form id="habit-form" class="habit-form" novalidate>
+          <div class="input-group">
+            <input
+              type="text"
+              id="habit-input"
+              class="habit-input"
+              placeholder="e.g. Drink 2L of water, Read 15 pages..."
+              maxlength="80"
+              autocomplete="off"
+              required
+              aria-label="New habit name"
+            />
+            <button type="submit" id="add-btn" class="btn btn-primary">
+              <span class="btn-icon" aria-hidden="true">+</span>
+              <span>Add Habit</span>
+            </button>
+          </div>
+          <span id="input-error" class="input-error hidden" role="alert"></span>
+        </form>
+      </section>
+
+      <!-- Habit List Section -->
+      <section class="card habits-card" aria-labelledby="habits-list-title">
+        <div class="card-header">
+          <h2 id="habits-list-title">Your Garden</h2>
+          <span id="habits-count-badge" class="badge">0 habits</span>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading-state" class="state-container">
+          <div class="spinner"></div>
+          <p>Tending to your habits...</p>
+        </div>
+
+        <!-- Empty State (Shown when no habits exist) -->
+        <div id="empty-state" class="state-container hidden">
+          <span class="state-icon" aria-hidden="true">🪴</span>
+          <h3>Your garden is empty</h3>
+          <p>Plant your first habit above to begin cultivating your daily routine!</p>
+        </div>
+
+        <!-- List of Habits -->
+        <ul id="habits-list" class="habits-list hidden" aria-label="Habits list">
+          <!-- Dynamically populated by script.js -->
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Habit Garden • Plant seeds daily and watch them bloom 🌿</p>
+    </footer>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
