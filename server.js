@@ -86,3 +86,5 @@ app.use('/api/*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🌿 Habit Garden is blooming at http://localhost:${PORT}`);
 });
+
+module.exports = app;

@@ -1,192 +1,141 @@
-# 🌱 Habit Garden
+# 🌿 Rootine
 
-A calm, simple, full-stack habit tracking web application designed to help you nurture positive daily routines. Built using vanilla JavaScript, Node.js, Express, and MongoDB Atlas with Mongoose.
+> **Small habits. Deep roots.**
+
+A calm, sophisticated, botanical productivity application where consistent actions are nurtured into thriving daily and weekly routines.
 
 ---
 
 ## 🔗 Live Demo
-* **Live Demo:** `[Live Demo Placeholder - e.g. https://habit-garden.onrender.com]` *(Add your deployed URL here)*
+* **Live Demo:** `[Live Demo Placeholder - e.g. https://rootine.onrender.com]` *(Add your deployed URL here)*
 
 ---
 
-## ✨ Features
+## ✨ Features & Architecture Highlights
 
-- **Daily Focus:** Displays "Habit Garden" along with today's dynamically formatted date.
-- **Add Habits:** Create new daily habits with immediate validation.
-- **Persistent Habit List:** Fetches and displays all habits directly from MongoDB Atlas.
-- **Daily Checkbox Toggle:** Mark habits as completed or not completed specifically for today.
-- **Progress Tracking:** Real-time progress bar and display showing completed tasks (e.g., *"2 of 4 done (50%)"*) with encouraging quotes.
-- **Delete Habits:** Cleanly remove habits from your garden with confirmation safeguards.
-- **Data Persistence:** Your habit history and completion dates persist securely across page refreshes and browser restarts.
-- **Soothing & Responsive Aesthetic:** Garden-inspired sage green, cream, and white palette optimized for both desktop/laptop and mobile screens.
+### 1. Distinct Tracking Modes
+- **Daily Habits**: Built for daily cadence. Track everyday habits like meditation, reading, and hydration.
+- **Weekly Habits**: Tailored for recurring days (e.g. Mon / Wed / Fri gym sessions, weekend meal prep). Evaluated against actual weekly schedules.
+- **Strict Distinction**: Weekly habits strictly never display daily streak counts, streak numbers, or flame badges.
+
+### 2. Signature Streak Design
+- For each daily habit, the habit icon is wrapped inside a **circular SVG progress ring** representing a rolling 7-day completion window.
+- The **consecutive-day streak number** is centered discreetly directly **above** the circular icon ring (e.g. `7` centered above the reading icon).
+- No distracting separate streak cards, pills, or duplicate metrics.
+
+### 3. Three-Tier Progress Engine
+- **Overall Daily Progress**: Prominent circular progress ring evaluating all active habits due on the selected date.
+- **Daily Section Progress**: Circular ring tracking active daily habits.
+- **Weekly Schedule Progress**: Circular ring evaluating completed occurrences against configured weekly due days.
+- **Living Botanical Garden**: Dynamic botanical stage (🌱 Seedling → 🌿 Sprouting → 🪴 Budding → 🌸 Full Bloom) with an celebratory bloom when all today's habits are completed.
+
+### 4. Interactive Monthly Calendar
+- Complete monthly grid with leap year handling and Monday-aligned columns.
+- Real status indicators: Fully completed, partially completed, none completed, no habits due, and future dates (never marked missed).
+- Click any historical date to inspect or edit records for that exact day without overwriting other days.
+
+### 5. Habit Management & Archiving
+- Create, edit, and safely archive habits without losing historical completion data.
+- 10 botanical SVG vector icons (Sprout, Leaf, Book, Water, Fitness, Journal, Mind, Walk, Code, Sleep).
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:**
-  - Semantic HTML5
-  - Modern, responsive CSS3 (CSS Custom Properties / Variables, Flexbox, accessible form styling)
-  - Vanilla JavaScript (ES6+, `fetch` API, dynamic DOM manipulation — no external UI frameworks)
-- **Backend:**
-  - [Node.js](https://nodejs.org/) runtime
-  - [Express.js](https://expressjs.com/) web server and REST API
-- **Database & ODM:**
-  - [MongoDB Atlas](https://www.mongodb.com/atlas) cloud database
-  - [Mongoose](https://mongoosejs.com/) for data modeling, schemas, and queries
-- **Configuration:**
-  - [dotenv](https://www.npmjs.com/package/dotenv) for environment variable isolation
+- **Frontend**: Vanilla ES6 JavaScript (modular domain engine: `dates.js`, `streaks.js`, `progress.js`, `calendar.js`, `storage.js`), Semantic HTML5, Custom Botanical CSS Design System.
+- **Backend**: [Node.js](https://nodejs.org/) & [Express.js](https://expressjs.com/) REST API.
+- **Database**: [MongoDB Atlas](https://www.mongodb.com/atlas) with [Mongoose](https://mongoosejs.com/).
+- **Testing**: Built-in Node test runner (`node --test`).
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Directory Structure
 
 ```text
-habit-tracker/
-├── .env.example        # Template for environment variables (copy to .env)
-├── .gitignore           # Prevents committing node_modules and real .env
-├── package.json         # Project metadata, scripts, and dependencies
-├── server.js            # Express server setup, database connection & static file serving
-├── README.md            # Documentation and setup instructions
+rootine/
 ├── models/
-│   └── Habit.js         # Mongoose schema and model for habits
+│   └── Habit.js               # Mongoose schema (Daily/Weekly, icons, dueDays, archiving)
 ├── routes/
-│   └── habits.js        # REST API route handlers (GET, POST, DELETE, PATCH)
-└── public/              # Static frontend client files
-    ├── index.html       # Single-page HTML interface
-    ├── style.css        # Sage-green styling and responsive layout
-    └── script.js        # Vanilla JS client logic and API integration
+│   └── habits.js              # REST endpoints (CRUD, date toggles, archiving)
+├── public/
+│   ├── index.html             # Dashboard, Calendar, and Manage views
+│   ├── style.css              # Sage & warm cream botanical design system
+│   ├── script.js              # Application controller & coordinator
+│   └── js/
+│       ├── domain/
+│       │   ├── dates.js       # Local timezone-safe date math
+│       │   ├── streaks.js     # Pure daily streak & 7-day rolling ratio engine
+│       │   ├── progress.js    # Overall, daily, and weekly schedule formulas
+│       │   └── calendar.js    # Monthly calendar grid calculation
+│       ├── components/
+│       │   ├── icons.js       # Minimal SVG botanical icon system
+│       │   └── circular-progress.js # Circular SVG rings & signature habit icon units
+│       └── storage/
+│           └── storage.js     # Centralized persistence with offline fallback
+├── tests/
+│   └── domain.test.js         # Comprehensive unit tests for domain logic
+├── server.js                  # Express static server & MongoDB connection
+├── package.json               # Scripts, metadata, dependencies
+├── .env.example               # Environment variables template
+├── .gitignore                 # Protects node_modules and .env
+└── README.md                  # Documentation
 ```
 
 ---
 
-## 🚀 Getting Started & Setup
-
-Follow these simple steps to run Habit Garden locally on your machine.
+## 🚀 Getting Started
 
 ### 1. Prerequisites
-Ensure you have the following installed:
-- **Node.js** (v18.0.0 or higher recommended): [Download Node.js](https://nodejs.org/)
-- **npm** (comes bundled with Node.js)
-- A free **MongoDB Atlas** account: [Sign up for MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register)
+- **Node.js** (v18.0.0 or higher)
+- **MongoDB Atlas** account (or local MongoDB)
 
----
-
-### 2. Install Dependencies
-Open your terminal or command prompt in the project root directory and run:
-
+### 2. Setup
 ```bash
+# Navigate to directory
+cd "OneDrive/Desktop/habit tracker"
+
+# Install dependencies
 npm install
+
+# Setup environment file
+copy .env.example .env
 ```
 
-This installs `express`, `mongoose`, and `dotenv`.
+Open `.env` and insert your MongoDB connection URI:
+```env
+PORT=3000
+MONGODB_URI=your_mongodb_connection_string
+```
 
----
+### 3. Run Tests
+Execute the unit test suite:
+```bash
+npm test
+```
 
-### 3. Set Up Your MongoDB Atlas Database
-
-1. Log into your [MongoDB Atlas](https://cloud.mongodb.com/) dashboard.
-2. Create a free shared cluster (M0 sandbox).
-3. Under **Database Access**, create a database user with a username and password (remember these credentials).
-4. Under **Network Access**, click **Add IP Address** and choose **Allow Access From Anywhere (`0.0.0.0/0`)** or your current IP address.
-5. In your cluster view, click **Connect** → **Drivers** (Node.js).
-6. Copy your connection string URI. It looks similar to:
-   ```text
-   mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/habitgarden?retryWrites=true&w=majority
-   ```
-
----
-
-### 4. Configure Environment Variables
-
-1. In the root directory, create a new file named `.env` by copying `.env.example`:
-   - On Windows (PowerShell):
-     ```powershell
-     Copy-Item .env.example .env
-     ```
-   - On Mac/Linux:
-     ```bash
-     cp .env.example .env
-     ```
-2. Open `.env` and paste your actual MongoDB Atlas connection URI:
-   ```env
-   PORT=3000
-   MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/habitgarden?retryWrites=true&w=majority
-   ```
-   *(Replace `<username>` and `<password>` with your database user credentials)*.
-
----
-
-### 5. Run the Application
-
-Start the server using npm:
-
+### 4. Start the Application
 ```bash
 npm start
 ```
-
-Or run with automatic reload during development (Node 18+):
-
-```bash
-npm run dev
-```
-
-You should see:
-```text
-🌿 Habit Garden is blooming at http://localhost:3000
-🌱 Connected successfully to MongoDB Atlas.
-```
-
-Open your browser and navigate to:
-```text
-http://localhost:3000
-```
+Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ---
 
-## 📡 API Reference
-
-All habit endpoints are prefixed with `/api/habits`:
-
-| Method | Endpoint | Description | Request Body | Response Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **GET** | `/api/habits` | Retrieves all habits sorted newest first | None | `200 OK` |
-| **POST** | `/api/habits` | Creates a new habit | `{ "name": "Read 15 mins" }` | `201 Created` |
-| **DELETE** | `/api/habits/:id` | Deletes a habit by its MongoDB `_id` | None | `200 OK` |
-| **PATCH** | `/api/habits/:id/toggle` | Toggles completion for a given date | `{ "date": "2026-10-23" }` | `200 OK` |
-
----
-
-## 🧠 How the Frontend, Backend & Database Connect
-
-Understanding full-stack architecture as a beginner:
-
-```mermaid
-flowchart LR
-    A["Browser (Frontend)<br/>HTML / CSS / JS"] -->|"HTTP Fetch Requests<br/>(GET, POST, PATCH, DELETE)"| B["Express Server (Backend)<br/>server.js & routes/"]
-    B -->|"Mongoose ODM Queries<br/>(find, save, delete)"| C["MongoDB Atlas<br/>Cloud Database"]
-    C -->|"Data Documents<br/>(Habits)"| B
-    B -->|"JSON Response & Static Files"| A
-```
-
-1. **The Client (Frontend):** When you open `http://localhost:3000`, the browser requests `index.html`, `style.css`, and `script.js`. `script.js` calls `fetch('/api/habits')` to request data from the server.
-2. **The Server (Backend):** `server.js` listens for incoming HTTP requests on port `3000`. Express forwards `/api/habits` requests to `routes/habits.js`.
-3. **The Database (Mongoose & Atlas):** In `routes/habits.js`, Mongoose translates JavaScript actions into MongoDB queries using the blueprint defined in `models/Habit.js`. The database stores the documents permanently in the cloud.
-4. **The Loop Closes:** Express sends the results back to `script.js` as JSON. `script.js` updates the HTML elements on your screen instantly.
-
----
-
-## 🔮 Planned Features (Roadmap)
-
-Future enhancements envisioned for Habit Garden:
-- [ ] **User Authentication:** Sign up and log in so multiple users can have private gardens.
-- [ ] **Streak Tracking:** Consecutive day counter and fire/sprout badges for unbroken daily habits.
-- [ ] **Weekly & Monthly Calendar View:** A visual calendar grid showing completion history over time.
-- [ ] **Habit Categories & Colors:** Tag habits by category (Health, Mind, Learning, Productivity) with custom botanical icons.
-- [ ] **Archive Feature:** Pause habits without deleting their historical records.
-- [ ] **Sound Effects & Confetti:** Gentle botanical chime sound and bloom effect when reaching 100% completion.
+## 🧪 Unit Test Coverage
+The suite in `tests/domain.test.js` validates:
+- [x] Timezone-safe local calendar serialization
+- [x] Leap year and month-boundary calculations
+- [x] Consecutive daily streak increments
+- [x] Active streak preservation while current day is in progress
+- [x] Streak break after missed days
+- [x] Duplicate completion prevention
+- [x] Strict rule: Weekly habits never calculate streaks
+- [x] 7-day rolling completion ratio
+- [x] Overall progress for selected dates excluding archived & non-due habits
+- [x] Weekly multi-day occurrence calculations and satisfaction rule
+- [x] Calendar grid alignment and future date handling
 
 ---
 
 ## 📄 License
-This project is open source and available under the [MIT License](LICENSE).
+MIT © by-adya

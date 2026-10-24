@@ -3,112 +3,441 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Habit Garden - Nurture Your Daily Routines</title>
+  <title>rootine. — Small habits. Deep roots.</title>
   
-  <!-- Google Fonts: Inter & Outfit for modern, clean typography -->
+  <!-- Google Fonts: Newsreader / Playfair / Outfit for botanical elegance & Plus Jakarta Sans for UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
 
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app-wrapper">
-    <!-- Header: Title, Today's Date, and Tagline -->
-    <header class="app-header">
-      <div class="brand">
-        <span class="brand-icon" aria-hidden="true">🌱</span>
-        <h1>Habit Garden</h1>
-      </div>
-      <p id="current-date" class="current-date" aria-live="polite">Loading today's date...</p>
-      <p class="tagline">Nurture small daily actions into lifelong growth.</p>
-    </header>
+  <!-- Confetti Canvas for Bloom Celebration -->
+  <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
 
-    <!-- Main Application Container -->
-    <main class="app-content">
-      <!-- Notification/Alert Banner for User Feedback -->
+  <div class="rootine-container">
+    
+    <!-- =================================================================== -->
+    <!-- LEFT SIDEBAR                                                        -->
+    <!-- =================================================================== -->
+    <aside class="sidebar" role="navigation" aria-label="Sidebar navigation">
+      <!-- Brand Logo -->
+      <div class="sidebar-brand">
+        <div class="brand-logo-wrap">
+          <svg class="brand-sprout-svg" viewBox="0 0 32 32" fill="none">
+            <path d="M16 28V14" stroke="#486851" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M16 14C12 9 6 10 5 15C11 16 14 15 16 14Z" fill="#75987d" stroke="#486851" stroke-width="1.8"/>
+            <path d="M16 11C20 6 26 7 27 12C21 13 18 12 16 11Z" fill="#8fad94" stroke="#486851" stroke-width="1.8"/>
+            <path d="M16 17C19 14 23 15 24 18C20 19 18 18 16 17Z" fill="#5c7f65" stroke="#486851" stroke-width="1.5"/>
+          </svg>
+          <div class="brand-names">
+            <span class="brand-title">rootine.</span>
+            <span class="brand-motto">Small habits. Deep roots.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button type="button" class="nav-item" data-view="calendar">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+          <span class="nav-label">Calendar</span>
+        </button>
+        <button type="button" class="nav-item" data-view="stats">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          </span>
+          <span class="nav-label">Stats</span>
+        </button>
+        <button type="button" class="nav-item" data-view="manage">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 4 13C4 6 11 2 20 2c0 9-4 16-11 16Z"/><path d="M11 20s2-4 5-8"/></svg>
+          </span>
+          <span class="nav-label">Habits</span>
+        </button>
+        <button type="button" class="nav-item" data-view="settings">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <span class="nav-label">Settings</span>
+        </button>
+      </nav>
+
+      <!-- Bottom Botanical Branch Art & Inscription -->
+      <div class="sidebar-botanical-footer">
+        <svg class="botanical-branch-svg" viewBox="0 0 180 220" fill="none" preserveAspectRatio="xMinYMax meet">
+          <!-- Main Stems -->
+          <path d="M-10 220 Q 35 150 50 70 Q 55 20 60 -10" stroke="#718d79" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+          <path d="M25 170 Q 75 140 105 100" stroke="#718d79" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+          <path d="M45 110 Q 95 85 125 50" stroke="#718d79" stroke-width="1.8" stroke-linecap="round" opacity="0.75"/>
+          <!-- Leaf Cluster 1 -->
+          <path d="M22 175 C 5 150 5 130 25 135 C 45 140 35 165 22 175 Z" fill="#91ad97" opacity="0.6"/>
+          <path d="M35 155 C 55 130 75 140 65 155 C 55 170 35 170 35 155 Z" fill="#678a70" opacity="0.75"/>
+          <path d="M70 142 C 90 120 110 130 100 145 C 90 160 70 155 70 142 Z" fill="#84a58c" opacity="0.7"/>
+          <path d="M105 100 C 130 80 145 95 130 110 C 115 125 100 115 105 100 Z" fill="#587961" opacity="0.8"/>
+          <!-- Leaf Cluster 2 -->
+          <path d="M48 105 C 30 80 35 60 55 70 C 75 80 65 100 48 105 Z" fill="#91ad97" opacity="0.65"/>
+          <path d="M60 85 C 80 60 105 68 95 85 C 85 100 65 98 60 85 Z" fill="#6a8e73" opacity="0.8"/>
+          <path d="M125 50 C 145 30 160 45 145 60 C 130 75 115 65 125 50 Z" fill="#7d9f86" opacity="0.75"/>
+          <!-- Top Sprout -->
+          <path d="M58 30 C 40 10 48 -5 68 5 C 85 15 75 35 58 30 Z" fill="#5a7d63" opacity="0.85"/>
+        </svg>
+        <p class="sidebar-quote">A healthier<br/>you grows<br/>here.</p>
+      </div>
+    </aside>
+
+    <!-- =================================================================== -->
+    <!-- MAIN WORKSPACE CONTENT                                              -->
+    <!-- =================================================================== -->
+    <div class="workspace-area">
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="header-greeting-block">
+          <h1 class="header-greeting">
+            Good morning, Adya <span class="leaf-icon-inline" aria-hidden="true">🍃</span>
+          </h1>
+          <p class="header-sub">Consistency today, a brighter tomorrow.</p>
+        </div>
+
+        <div class="header-controls">
+          <!-- Search Icon Button -->
+          <button type="button" class="btn-icon-subtle" aria-label="Search habits">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+
+          <!-- Date Pill Navigator -->
+          <div class="header-date-pill">
+            <span class="date-calendar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </span>
+            <span id="header-date-display" class="header-date-text">Mon, Oct 27, 2026</span>
+            <div class="date-arrows">
+              <button type="button" id="prev-date-btn" class="date-arrow-btn" aria-label="Previous day">‹</button>
+              <button type="button" id="next-date-btn" class="date-arrow-btn" aria-label="Next day">›</button>
+            </div>
+          </div>
+
+          <!-- User Avatar Circle -->
+          <div class="user-avatar" title="Adya's Garden">
+            <span class="avatar-initials">A</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Notification Banner -->
       <div id="alert-banner" class="alert-banner hidden" role="status" aria-live="polite"></div>
 
-      <!-- Today's Progress Card -->
-      <section class="card progress-card" aria-labelledby="progress-title">
-        <div class="card-header">
-          <h2 id="progress-title">Today's Progress</h2>
-          <span id="progress-percent" class="progress-badge">0%</span>
+      <!-- Main Dashboard Grid -->
+      <main class="dashboard-grid">
+
+        <!-- =============================================================== -->
+        <!-- ROW 1: CALENDAR CARD & TODAY'S PROGRESS CARD                   -->
+        <!-- =============================================================== -->
+        <div class="row-top-cards">
+
+          <!-- CARD 1: COMPACT MONTHLY CALENDAR -->
+          <section class="card calendar-card" aria-labelledby="cal-month-title">
+            <div class="calendar-card-header">
+              <div class="cal-title-nav">
+                <button type="button" id="cal-prev-btn" class="cal-arrow-btn" aria-label="Previous month">‹</button>
+                <h2 id="cal-month-title" class="cal-month-title">October 2026</h2>
+                <button type="button" id="cal-next-btn" class="cal-arrow-btn" aria-label="Next month">›</button>
+              </div>
+            </div>
+
+            <div class="calendar-card-body">
+              <!-- Calendar Grid Left -->
+              <div class="calendar-grid-side">
+                <div class="cal-weekdays">
+                  <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+                <div id="cal-days-grid" class="cal-days-grid">
+                  <!-- Generated dynamically: Day numbers with green dot status indicators -->
+                </div>
+              </div>
+
+              <!-- Calendar Legend Right -->
+              <div class="cal-legend-side">
+                <div class="cal-legend-row">
+                  <span class="legend-dot dot-all-done" aria-hidden="true"></span>
+                  <span class="legend-txt">All habits completed</span>
+                </div>
+                <div class="cal-legend-row">
+                  <span class="legend-dot dot-some-done" aria-hidden="true"></span>
+                  <span class="legend-txt">Some completed</span>
+                </div>
+                <div class="cal-legend-row">
+                  <span class="legend-dot dot-no-habits" aria-hidden="true"></span>
+                  <span class="legend-txt">No habits</span>
+                </div>
+                <div class="cal-legend-row">
+                  <span class="legend-square square-selected" aria-hidden="true"></span>
+                  <span class="legend-txt">Selected date</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- CARD 2: TODAY'S PROGRESS & LIVING BOTANICAL SCENE -->
+          <section class="card progress-garden-card" aria-labelledby="progress-card-title">
+            <div class="progress-card-top-title">
+              <span class="sprout-heading-icon" aria-hidden="true">🌱</span>
+              <h2 id="progress-card-title">Today's Progress</h2>
+            </div>
+
+            <div class="progress-garden-body">
+              <!-- Left: Circular Progress Ring -->
+              <div class="ring-column">
+                <div id="progress-ring-mount" class="progress-ring-mount">
+                  <!-- Circular SVG ring inserted here -->
+                </div>
+              </div>
+
+              <!-- Right: Motivational Quote & Illustrated Plant Garden -->
+              <div class="garden-illustration-column">
+                <p id="garden-quote" class="garden-quote">
+                  You're growing steadily! <span aria-hidden="true">🌱</span>
+                </p>
+
+                <!-- Botanical Garden Illustration Vector -->
+                <div class="garden-scene-container" aria-hidden="true">
+                  <svg class="garden-plants-svg" viewBox="0 0 320 130" fill="none" preserveAspectRatio="xMidYMax meet">
+                    <!-- Soft Morning Sun -->
+                    <circle cx="270" cy="35" r="28" fill="#faebd7" opacity="0.6"/>
+                    <circle cx="270" cy="35" r="20" fill="#fef2e2" opacity="0.8"/>
+
+                    <!-- Background Soft Mist Foliage -->
+                    <path d="M0 130 Q 30 75 70 130" fill="#c3d6c7" opacity="0.35"/>
+                    <path d="M50 130 Q 95 65 140 130" fill="#bad0bf" opacity="0.35"/>
+                    <path d="M120 130 Q 180 50 240 130" fill="#c7dacb" opacity="0.35"/>
+                    <path d="M220 130 Q 275 60 320 130" fill="#bad0bf" opacity="0.35"/>
+
+                    <!-- Soil Mound Bottom -->
+                    <path d="M-10 130 Q 80 102 160 106 Q 240 103 330 130 Z" fill="#8f7663"/>
+                    <path d="M-10 130 Q 80 105 160 109 Q 240 106 330 130 Z" fill="#6d5849"/>
+
+                    <!-- Plant 1 (Small Sprout Left) -->
+                    <path d="M45 110 Q 40 85 30 75 Q 48 85 46 110" fill="#6b8e73"/>
+                    <path d="M45 92 Q 60 78 70 82 Q 55 95 45 94" fill="#82a68b"/>
+
+                    <!-- Plant 2 (Small Flower Center-Left) -->
+                    <path d="M105 112 Q 108 80 110 50" stroke="#52775a" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M108 90 Q 90 80 82 86 Q 98 96 107 92" fill="#75997d"/>
+                    <path d="M109 75 Q 128 65 132 72 Q 118 82 109 77" fill="#64896c"/>
+                    <!-- Pink Flower Bloom -->
+                    <circle cx="110" cy="48" r="5" fill="#f2b4b4"/>
+                    <circle cx="105" cy="48" r="4.5" fill="#fabebb"/>
+                    <circle cx="115" cy="48" r="4.5" fill="#fabebb"/>
+                    <circle cx="110" cy="43" r="4.5" fill="#fabebb"/>
+                    <circle cx="110" cy="53" r="4.5" fill="#fabebb"/>
+                    <circle cx="110" cy="48" r="2.8" fill="#e88989"/>
+
+                    <!-- Plant 3 (Tall Lush Bush Center-Right) -->
+                    <path d="M175 112 Q 175 65 178 35" stroke="#3b5d43" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M176 95 Q 155 85 148 92 Q 165 102 176 97" fill="#587e61"/>
+                    <path d="M177 80 Q 198 70 205 77 Q 188 88 177 82" fill="#4a6f52"/>
+                    <path d="M177 62 Q 158 50 152 56 Q 168 68 177 64" fill="#648a6d"/>
+                    <path d="M178 45 Q 198 32 202 38 Q 188 50 178 46" fill="#587e61"/>
+                    <path d="M178 35 Q 170 18 178 12 Q 186 18 178 35" fill="#6d9476"/>
+
+                    <!-- Plant 4 (Right Bush with Broad Leaves) -->
+                    <path d="M235 115 Q 242 70 248 40" stroke="#486d50" stroke-width="2.8" stroke-linecap="round"/>
+                    <path d="M240 92 Q 220 80 215 88 Q 230 98 240 94" fill="#61876a"/>
+                    <path d="M244 76 Q 266 65 272 73 Q 254 84 244 78" fill="#507559"/>
+                    <path d="M246 55 Q 230 42 225 48 Q 240 58 246 56" fill="#6b9274"/>
+                    <path d="M248 40 Q 242 22 250 16 Q 258 22 248 40" fill="#5a8063"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </section>
+
         </div>
 
-        <div class="progress-details">
-          <span id="progress-count" class="progress-count">0 of 0 done</span>
-          <p id="progress-quote" class="progress-quote">Every journey begins with a single seed.</p>
+        <!-- =============================================================== -->
+        <!-- ROW 2: DAILY HABITS & WEEKLY HABITS                            -->
+        <!-- =============================================================== -->
+        <div class="row-bottom-cards">
+
+          <!-- COLUMN 1: DAILY HABITS -->
+          <section class="card habit-list-card" aria-labelledby="daily-heading">
+            <div class="habit-card-header">
+              <div class="habit-heading-wrap">
+                <div class="heading-with-icon">
+                  <span class="cadence-header-icon" aria-hidden="true">☀️</span>
+                  <h2 id="daily-heading">Daily Habits</h2>
+                </div>
+                <p id="daily-subtitle" class="habit-card-subtitle">4 habits • Complete each day</p>
+              </div>
+
+              <button type="button" class="btn-add-pill open-add-daily-btn" aria-label="Add new daily habit">
+                <span class="pill-plus" aria-hidden="true">+</span> Add Habit
+              </button>
+            </div>
+
+            <!-- List of Daily Habits -->
+            <div id="daily-habits-container" class="habits-flow-container">
+              <!-- Dynamically rendered daily rows -->
+            </div>
+          </section>
+
+          <!-- COLUMN 2: WEEKLY HABITS -->
+          <section class="card habit-list-card" aria-labelledby="weekly-heading">
+            <div class="habit-card-header">
+              <div class="habit-heading-wrap">
+                <div class="heading-with-icon">
+                  <span class="cadence-header-icon" aria-hidden="true">📅</span>
+                  <h2 id="weekly-heading">Weekly Habits</h2>
+                </div>
+                <p id="weekly-subtitle" class="habit-card-subtitle">3 habits • Complete on selected days</p>
+              </div>
+
+              <button type="button" class="btn-add-pill open-add-weekly-btn" aria-label="Add new weekly habit">
+                <span class="pill-plus" aria-hidden="true">+</span> Add Habit
+              </button>
+            </div>
+
+            <!-- List of Weekly Habits -->
+            <div id="weekly-habits-container" class="habits-flow-container">
+              <!-- Dynamically rendered weekly rows -->
+            </div>
+          </section>
+
         </div>
 
-        <!-- Visual Progress Bar -->
-        <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-          <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
-        </div>
-      </section>
+      </main>
 
-      <!-- Add New Habit Form Card -->
-      <section class="card form-card" aria-labelledby="add-habit-title">
-        <h2 id="add-habit-title" class="sr-only">Add a New Habit</h2>
-        <form id="habit-form" class="habit-form" novalidate>
-          <div class="input-group">
-            <input
-              type="text"
-              id="habit-input"
-              class="habit-input"
-              placeholder="e.g. Drink 2L of water, Read 15 pages..."
-              maxlength="80"
-              autocomplete="off"
-              required
-              aria-label="New habit name"
-            />
-            <button type="submit" id="add-btn" class="btn btn-primary">
-              <span class="btn-icon" aria-hidden="true">+</span>
-              <span>Add Habit</span>
-            </button>
-          </div>
-          <span id="input-error" class="input-error hidden" role="alert"></span>
-        </form>
-      </section>
-
-      <!-- Habit List Section -->
-      <section class="card habits-card" aria-labelledby="habits-list-title">
-        <div class="card-header">
-          <h2 id="habits-list-title">Your Garden</h2>
-          <span id="habits-count-badge" class="badge">0 habits</span>
-        </div>
-
-        <!-- Loading Indicator -->
-        <div id="loading-state" class="state-container">
-          <div class="spinner"></div>
-          <p>Tending to your habits...</p>
-        </div>
-
-        <!-- Empty State (Shown when no habits exist) -->
-        <div id="empty-state" class="state-container hidden">
-          <span class="state-icon" aria-hidden="true">🪴</span>
-          <h3>Your garden is empty</h3>
-          <p>Plant your first habit above to begin cultivating your daily routine!</p>
-        </div>
-
-        <!-- List of Habits -->
-        <ul id="habits-list" class="habits-list hidden" aria-label="Habits list">
-          <!-- Dynamically populated by script.js -->
-        </ul>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="app-footer">
-      <p>Habit Garden • Plant seeds daily and watch them bloom 🌿</p>
-    </footer>
+    </div>
   </div>
 
-  <!-- JavaScript Application Logic -->
+  <!-- =================================================================== -->
+  <!-- MODAL: ADD / EDIT HABIT DIALOG                                      -->
+  <!-- =================================================================== -->
+  <div id="habit-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">New Habit</h3>
+        <button type="button" id="close-modal-btn" class="btn-icon-close" aria-label="Close dialog">✕</button>
+      </div>
+
+      <form id="habit-dialog-form" novalidate>
+        <input type="hidden" id="modal-habit-id" value="" />
+
+        <!-- Habit Name -->
+        <div class="form-group">
+          <label for="modal-habit-name" class="form-label">Habit Name <span class="required">*</span></label>
+          <input
+            type="text"
+            id="modal-habit-name"
+            class="form-input"
+            placeholder="e.g. Read, Workout, Drink Water..."
+            maxlength="60"
+            required
+          />
+          <span id="modal-name-error" class="form-error hidden"></span>
+        </div>
+
+        <!-- Optional Description -->
+        <div class="form-group">
+          <label for="modal-habit-desc" class="form-label">Intention / Description <span class="optional">(optional)</span></label>
+          <input
+            type="text"
+            id="modal-habit-desc"
+            class="form-input"
+            placeholder="e.g. 20 pages before sleep"
+            maxlength="100"
+          />
+        </div>
+
+        <!-- Habit Type (Daily vs Weekly) -->
+        <div class="form-group">
+          <label class="form-label">Tracking Cadence</label>
+          <div class="cadence-selector">
+            <label class="cadence-option">
+              <input type="radio" name="habit-type" value="daily" checked />
+              <div class="cadence-box">
+                <strong>Daily Habit</strong>
+                <span>Complete each day</span>
+              </div>
+            </label>
+            <label class="cadence-option">
+              <input type="radio" name="habit-type" value="weekly" />
+              <div class="cadence-box">
+                <strong>Weekly Habit</strong>
+                <span>Complete on selected days</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Weekly Days Selector (Visible only when Weekly is selected) -->
+        <div class="form-group hidden" id="weekly-days-group">
+          <label class="form-label">Select Scheduled Days <span class="required">*</span></label>
+          <div class="days-pill-selector">
+            <button type="button" class="day-pill" data-day="1">Mon</button>
+            <button type="button" class="day-pill" data-day="2">Tue</button>
+            <button type="button" class="day-pill" data-day="3">Wed</button>
+            <button type="button" class="day-pill" data-day="4">Thu</button>
+            <button type="button" class="day-pill" data-day="5">Fri</button>
+            <button type="button" class="day-pill" data-day="6">Sat</button>
+            <button type="button" class="day-pill" data-day="0">Sun</button>
+          </div>
+          <span id="modal-days-error" class="form-error hidden">Select at least one day for weekly schedule.</span>
+        </div>
+
+        <!-- Botanical & Activity Icon Selector -->
+        <div class="form-group">
+          <label class="form-label">Icon</label>
+          <div class="icon-picker-grid" id="icon-picker-grid">
+            <!-- Dynamically populated with SVG icons -->
+          </div>
+          <input type="hidden" id="modal-selected-icon" value="book" />
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="modal-footer">
+          <button type="button" id="modal-cancel-btn" class="btn btn-ghost">Cancel</button>
+          <button type="submit" id="modal-save-btn" class="btn btn-primary">Save Habit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL: CONFIRMATION DIALOG                                          -->
+  <!-- =================================================================== -->
+  <div id="confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-card modal-card-sm">
+      <h3 id="confirm-title" class="confirm-title">Confirm Action</h3>
+      <p id="confirm-message" class="confirm-message">Are you sure?</p>
+      <div class="modal-footer">
+        <button type="button" id="confirm-cancel-btn" class="btn btn-ghost">Cancel</button>
+        <button type="button" id="confirm-ok-btn" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="js/domain/dates.js"></script>
+  <script src="js/domain/streaks.js"></script>
+  <script src="js/domain/progress.js"></script>
+  <script src="js/domain/calendar.js"></script>
+  <script src="js/components/icons.js"></script>
+  <script src="js/components/circular-progress.js"></script>
+  <script src="js/storage/storage.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
