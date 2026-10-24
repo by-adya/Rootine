@@ -7,7 +7,7 @@ A calm, sophisticated, botanical productivity application where consistent actio
 ---
 
 ## 🔗 Live Demo
-* **Live Demo:** `[Live Demo Placeholder - e.g. https://rootine.onrender.com]` *(Add your deployed URL here)*
+* **Live Demo:** https://rootine-nine.vercel.app/
 
 ---
 
