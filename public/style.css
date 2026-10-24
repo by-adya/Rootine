@@ -8,34 +8,34 @@
    1. Theme Variables & Design Tokens
    -------------------------------------------------------------------------- */
 :root {
-  /* Surfaces */
-  --bg-app: #f6f3eb;
-  --bg-sidebar: #faf8f3;
-  --bg-card: #ffffff;
-  --bg-card-subtle: #fbf9f4;
-  --bg-cream-pill: #eef2ed;
-  --bg-cream-light: #f5f1e8;
+  /* Surfaces matching reference image */
+  --bg-app: #F8F5EA;
+  --bg-sidebar: #E8E8D5;
+  --bg-card: #FCFAF3;
+  --bg-card-subtle: #FAF7EF;
+  --bg-cream-pill: #DDE0CB;
+  --bg-cream-light: #F2EFE6;
 
   /* Botanical Greens */
-  --green-deep: #1e2f23;
-  --green-primary: #486851;
-  --green-dark: #37533f;
-  --green-sage: #6b8f74;
-  --green-soft: #9db8a3;
-  --green-light: #d8e5db;
-  --green-tint: #eaf1ec;
+  --green-deep: #171914;
+  --green-primary: #496A42;
+  --green-dark: #37533F;
+  --green-sage: #A6B18C;
+  --green-soft: #B5C29C;
+  --green-light: #DDE0CB;
+  --green-tint: #EAEFE7;
 
   /* Borders & Dividers */
-  --border-app: #eae5d9;
-  --border-card: #e8e2d5;
-  --border-subtle: #f0ebe0;
-  --border-check: #cdc7b8;
+  --border-app: #DCD8C8;
+  --border-card: #E9E3D6;
+  --border-subtle: #F0EAE0;
+  --border-check: #CDC7B8;
 
   /* Typography */
-  --text-title: #223326;
-  --text-main: #2b392e;
-  --text-muted: #64786a;
-  --text-light: #8e9e92;
+  --text-title: #171914;
+  --text-main: #171914;
+  --text-muted: #69675D;
+  --text-light: #8E9284;
 
   /* Fonts */
   --font-serif: 'Newsreader', Georgia, serif;
@@ -102,10 +102,10 @@ body {
    4. Left Sidebar
    -------------------------------------------------------------------------- */
 .sidebar {
-  width: 215px;
+  width: 245px;
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-app);
-  padding: 1.75rem 1.15rem;
+  padding: 1.75rem 1.25rem;
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -778,7 +778,7 @@ body {
   min-width: 0;
 }
 
-/* SIGNATURE STREAK CIRCLE COMPONENT */
+/* SIGNATURE STREAK CIRCLE COMPONENT & LIVING PLANT FRAME */
 .streak-ring-unit {
   position: relative;
   display: flex;
@@ -789,7 +789,7 @@ body {
   flex-shrink: 0;
 }
 
-/* Discreet streak count above circular ring */
+/* Discreet streak count directly above the plant icon */
 .streak-top-num {
   font-family: var(--font-heading);
   font-size: 0.72rem;
@@ -797,6 +797,85 @@ body {
   color: var(--text-muted);
   line-height: 1;
   margin-bottom: 2px;
+}
+
+.plant-icon-frame {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plant-icon-frame .plant-stage-svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+  transition: transform 300ms ease;
+}
+
+.weekly-plant-frame {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fbf7ee;
+  border: 1.5px solid #ded9cb;
+}
+
+.weekly-plant-frame .plant-stage-svg {
+  width: 25px;
+  height: 25px;
+  display: block;
+}
+
+/* Plant Growth Milestone Pulse Animation */
+.plant-growing-pulse {
+  animation: plantGrowPulse 650ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes plantGrowPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); filter: drop-shadow(0 2px 8px rgba(73, 106, 66, 0.35)); }
+  100% { transform: scale(1); }
+}
+
+/* Circular Progress Components */
+.circular-progress-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-svg {
+  transform: rotate(0deg);
+  display: block;
+}
+
+.progress-track-circle {
+  fill: none;
+  stroke: #e8e3d6;
+}
+
+.progress-fill-circle {
+  fill: none;
+  stroke: var(--green-primary);
+  transition: stroke-dashoffset 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-center-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .ring-icon-box {

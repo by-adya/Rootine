@@ -1,10 +1,10 @@
 // public/js/components/circular-progress.js
 // ----------------------------------------------------------------------------
-// Rootine - Reusable Circular Progress Ring Component
-// Generates accessible SVG progress rings for:
-// 1. Overall Dashboard Progress (large)
-// 2. Daily & Weekly Section Progress (medium)
-// 3. Signature Daily Habit Icon Rings (wrapping around habit icons with centered streak number)
+// Rootine - Circular Progress & Living Plant Habit Ring Component
+// Implements exact visual specifications:
+// 1. Overall Dashboard Progress Ring (large, thick forest green stroke with cream track)
+// 2. Daily Habits Living Plant Ring with streak number placed directly on top
+// 3. Weekly Habits Living Plant Frame (strictly without streaks or streak rings)
 // ----------------------------------------------------------------------------
 
 (function (root, factory) {
@@ -19,19 +19,10 @@
 
   /**
    * Generates a reusable SVG circular progress ring HTML string.
-   *
-   * @param {Object} options
-   * @param {number} options.size - Diameter in px (e.g. 120 for overall, 44 for habit icon)
-   * @param {number} options.strokeWidth - Stroke width in px (e.g. 8 or 3)
-   * @param {number} options.percent - 0 to 100
-   * @param {string} options.centerHtml - HTML to render in the center
-   * @param {string} options.ariaLabel - Accessible description
-   * @param {string} [options.className] - Extra CSS classes
-   * @returns {string} HTML string
    */
   function renderCircularRing({
-    size = 64,
-    strokeWidth = 5,
+    size = 98,
+    strokeWidth = 8,
     percent = 0,
     centerHtml = '',
     ariaLabel = 'Progress ring',
@@ -72,54 +63,57 @@
   }
 
   /**
-   * Signature Habit Icon Ring (CRITICAL REQUIREMENT from Section 6).
+   * Signature Habit Plant Ring (CRITICAL REQUIREMENT from Section 3, 4 & 5).
    *
-   * Structure:
+   * For DAILY habits:
    *              [streak number]  <-- Centered discreetly above the ring
-   *           [circular SVG ring]  <-- 7-day rolling completion ring
-   *             [habit icon]      <-- Centered inside
+   *           [circular SVG ring]  <-- 7-day rolling completion ratio
+   *             [living plant]    <-- Centered inside (Seed -> Sprout -> Bloom)
    *
-   * Weekly habits do NOT show streak number or progress ring.
+   * For WEEKLY habits:
+   *           [decorative frame]   <-- Subtle circular frame
+   *             [living plant]    <-- Centered inside
+   *           *STRICTLY NO streak number and NO streak rings*
    *
    * @param {Object} options
-   * @param {string} options.iconSvg - Inner SVG icon
-   * @param {number} options.streakCount - Current consecutive day streak
-   * @param {number} options.rollingRatio - 0 to 1 rolling 7-day ratio
-   * @param {boolean} options.isWeekly - True if weekly habit (disables streak & ring)
-   * @param {boolean} options.isCompleted - Completed on selected date
+   * @param {string} options.plantSvg - Living plant SVG for the habit's growth stage
+   * @param {number} [options.streakCount=0] - Current consecutive-day streak
+   * @param {number} [options.rollingRatio=0] - Rolling 7-day completion ratio (0 to 1)
+   * @param {boolean} [options.isWeekly=false] - True for weekly habits
+   * @param {boolean} [options.isCompleted=false] - True if completed on selected date
+   * @param {number} [options.growthStage=1] - 1 to 6
    * @returns {string} HTML string
    */
   function renderHabitIconComponent({
-    iconSvg,
+    plantSvg,
     streakCount = 0,
     rollingRatio = 0,
     isWeekly = false,
     isCompleted = false,
+    growthStage = 1,
   }) {
     if (isWeekly) {
-      // Weekly habit: regular icon without streak number or progress ring
+      // Weekly habit: living plant in decorative cream frame without streak or ring
       return `
-        <div class="habit-icon-unit weekly-unit ${isCompleted ? 'completed' : ''}">
-          <div class="habit-icon-circle">
-            ${iconSvg}
+        <div class="streak-ring-unit weekly-habit-unit ${isCompleted ? 'completed' : ''}" title="Growth Stage ${growthStage}">
+          <div class="weekly-plant-frame">
+            ${plantSvg}
           </div>
         </div>
       `;
     }
 
-    // Daily habit: streak number above circular SVG ring
-    const percent = Math.round(rollingRatio * 100);
+    // Daily habit: streak number on top + 7-day rolling circular ring + living plant in center
+    const percent = Math.min(100, Math.max(0, Math.round(rollingRatio * 100)));
     const size = 42;
-    const strokeWidth = 3;
+    const strokeWidth = 2.8;
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (percent / 100) * circumference;
 
     return `
-      <div class="habit-icon-unit daily-unit ${isCompleted ? 'completed' : ''}">
-        <span class="habit-streak-number" title="${streakCount} day streak" aria-label="${streakCount} day streak">
-          ${streakCount > 0 ? streakCount : '0'}
-        </span>
+      <div class="streak-ring-unit daily-habit-unit ${isCompleted ? 'completed' : ''}" title="Stage ${growthStage} • ${streakCount} day streak">
+        <span class="streak-top-num" aria-label="${streakCount} day streak">${streakCount > 0 ? streakCount : '0'}</span>
         <div class="circular-progress-wrap habit-ring-wrap" style="width: ${size}px; height: ${size}px;" role="progressbar" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100" aria-label="${percent}% 7-day completion">
           <svg class="circular-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
             <circle
@@ -142,8 +136,8 @@
             />
           </svg>
           <div class="progress-center-content">
-            <div class="habit-center-icon">
-              ${iconSvg}
+            <div class="plant-icon-frame">
+              ${plantSvg}
             </div>
           </div>
         </div>

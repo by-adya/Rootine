@@ -1,8 +1,12 @@
 // public/script.js
 // ----------------------------------------------------------------------------
-// rootine. — Application Controller
-// Directly matches the visual design: Compact Calendar with status dots,
-// Today's Progress ring with garden scene, and Daily/Weekly habit cards.
+// rootine. — Application Controller with Living Habit Growth Engine 🌱
+// Matches exact visual reference:
+// - Left sidebar with botanical branch and brand inscription
+// - Compact monthly calendar with status indicators
+// - Today's Progress ring with living botanical garden bed
+// - Daily habits with living plant icons, streak numbers on top, and 7-day mini dots
+// - Weekly habits with living plant icons and scheduled due-day tags (strictly no streaks)
 // ----------------------------------------------------------------------------
 
 (function () {
@@ -10,9 +14,10 @@
 
   const Dates = window.Rootine.Dates;
   const Streaks = window.Rootine.Streaks;
+  const Growth = window.Rootine.Growth;
   const Progress = window.Rootine.Progress;
   const Calendar = window.Rootine.Calendar;
-  const Icons = window.Rootine.Icons;
+  const PlantStages = window.Rootine.PlantStages;
   const CircularProgress = window.Rootine.CircularProgress;
   const Storage = window.Rootine.Storage;
 
@@ -25,6 +30,7 @@
     todayDate: Dates.formatLocalDateKey(new Date()),
     calendarYear: new Date().getFullYear(),
     calendarMonth: new Date().getMonth(),
+    recentlyAdvancedHabitId: null,
     alertTimer: null,
   };
 
@@ -70,7 +76,6 @@
     modalDaysError: document.getElementById('modal-days-error'),
     dayPills: document.querySelectorAll('.day-pill'),
     iconPickerGrid: document.getElementById('icon-picker-grid'),
-    modalSelectedIcon: document.getElementById('modal-selected-icon'),
 
     // Confirm Modal
     confirmModal: document.getElementById('confirm-modal'),
@@ -92,7 +97,7 @@
     state.alertTimer = setTimeout(() => {
       dom.alertBanner.classList.add('hidden');
       state.alertTimer = null;
-    }, 4000);
+    }, 4500);
   }
 
   // ==========================================================================
@@ -170,7 +175,7 @@
   function renderTodayProgress() {
     const overall = Progress.calculateOverallProgress(state.habits, state.selectedDate);
 
-    // Render Circular Progress Ring (size: 96px, stroke: 8px)
+    // Render Circular Progress Ring (size: 98px, stroke: 8px)
     dom.progressRingMount.innerHTML = CircularProgress.renderCircularRing({
       size: 98,
       strokeWidth: 8,
@@ -193,7 +198,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // Card 3: Daily Habits Column
+  // Card 3: Daily Habits Column (Living Plant Icons & Streaks on Top)
   // --------------------------------------------------------------------------
   function renderDailyHabits() {
     const dailyHabits = state.habits.filter((h) => !h.archivedAt && h.type === 'daily');
@@ -219,8 +224,25 @@
       const streakCount = Streaks.calculateDailyStreak(habit, state.selectedDate);
       const rolling = Streaks.getRollingCompletionRatio(habit, state.selectedDate, 7);
 
+      // Living Habit Growth Stage (Every habit starts as a seed 🌱)
+      const growth = Growth.calculateGrowthStage(habit);
+      const plantSvg = PlantStages.getPlantStageSvg(growth.stage);
+
       const row = document.createElement('div');
       row.className = 'habit-row-item';
+
+      // Check if this habit recently advanced a stage to trigger pulse animation
+      const isJustGrown = state.recentlyAdvancedHabitId === habit._id;
+
+      // Circular Ring Unit with plant icon in center and streak number centered on top
+      const iconUnitHtml = CircularProgress.renderHabitIconComponent({
+        plantSvg,
+        streakCount,
+        rollingRatio: rolling.ratio,
+        isWeekly: false,
+        isCompleted,
+        growthStage: growth.stage,
+      });
 
       // Mon-Sun mini dots
       const completedSet = new Set(habit.completedDates || []);
@@ -236,22 +258,16 @@
         })
         .join('');
 
-      // Custom icon styling classes
-      const iconKey = habit.icon || 'book';
-      const iconClass = `icon-${iconKey}`;
-      const iconSvg = Icons.getIcon(iconKey);
-
       row.innerHTML = `
         <div class="habit-left-combo">
-          <div class="streak-ring-unit">
-            <span class="streak-top-num">${streakCount > 0 ? streakCount : ''}</span>
-            <div class="ring-icon-box ${iconClass}">
-              ${iconSvg}
-            </div>
+          <div class="${isJustGrown ? 'plant-growing-pulse' : ''}">
+            ${iconUnitHtml}
           </div>
 
           <div class="habit-info-block">
-            <span class="habit-name-txt">${escapeHtml(habit.name)}</span>
+            <span class="habit-name-txt" title="Stage ${growth.stage}: ${growth.name} (${growth.totalCompletions} completions)">
+              ${escapeHtml(habit.name)}
+            </span>
             <div class="daily-week-dots">
               ${miniDotsHtml}
             </div>
@@ -282,10 +298,13 @@
 
       dom.dailyHabitsContainer.appendChild(row);
     });
+
+    // Reset pulse animation flag after rendering
+    state.recentlyAdvancedHabitId = null;
   }
 
   // --------------------------------------------------------------------------
-  // Card 4: Weekly Habits Column
+  // Card 4: Weekly Habits Column (Living Plant Icons, Strictly NO Streaks)
   // --------------------------------------------------------------------------
   function renderWeeklyHabits() {
     const weeklyHabits = state.habits.filter((h) => !h.archivedAt && h.type === 'weekly');
@@ -307,26 +326,36 @@
     weeklyHabits.forEach((habit) => {
       const isCompleted = Array.isArray(habit.completedDates) && habit.completedDates.includes(state.selectedDate);
 
+      // Living Habit Growth Stage (Weekly plants grow from their scheduled occurrences)
+      const growth = Growth.calculateGrowthStage(habit);
+      const plantSvg = PlantStages.getPlantStageSvg(growth.stage);
+
       const row = document.createElement('div');
       row.className = 'habit-row-item';
 
       const dueDays = Array.isArray(habit.dueDays) ? habit.dueDays : [6];
       const dueDaysText = dueDays.map((d) => dayShortNames[d]).join(', ');
 
-      const iconKey = habit.icon || 'sprout';
-      const iconClass = `icon-${iconKey}`;
-      const iconSvg = Icons.getIcon(iconKey);
+      // Weekly habit unit (strictly NO streak number, NO streak ring)
+      const iconUnitHtml = CircularProgress.renderHabitIconComponent({
+        plantSvg,
+        isWeekly: true,
+        isCompleted,
+        growthStage: growth.stage,
+      });
+
+      const isJustGrown = state.recentlyAdvancedHabitId === habit._id;
 
       row.innerHTML = `
         <div class="habit-left-combo">
-          <div class="streak-ring-unit">
-            <div class="ring-icon-box ${iconClass}">
-              ${iconSvg}
-            </div>
+          <div class="${isJustGrown ? 'plant-growing-pulse' : ''}">
+            ${iconUnitHtml}
           </div>
 
           <div class="habit-info-block">
-            <span class="habit-name-txt">${escapeHtml(habit.name)}</span>
+            <span class="habit-name-txt" title="Stage ${growth.stage}: ${growth.name} (${growth.totalCompletions} completions)">
+              ${escapeHtml(habit.name)}
+            </span>
             <div class="weekly-schedule-tag">
               <span class="weekly-day-pill">${dueDaysText}</span>
               <div class="weekly-dot-track">
@@ -364,6 +393,8 @@
 
       dom.weeklyHabitsContainer.appendChild(row);
     });
+
+    state.recentlyAdvancedHabitId = null;
   }
 
   // ==========================================================================
@@ -371,11 +402,24 @@
   // ==========================================================================
   async function handleToggleHabit(habitId, dateStr) {
     try {
+      const habit = state.habits.find((h) => h._id === habitId);
+      const oldGrowth = habit ? Growth.calculateGrowthStage(habit) : null;
+
       const updated = await Storage.toggleHabitDate(habitId, dateStr);
       const idx = state.habits.findIndex((h) => h._id === habitId);
       if (idx !== -1) {
         state.habits[idx] = updated;
       }
+
+      // Check if the plant grew to a new stage!
+      if (oldGrowth) {
+        const newGrowth = Growth.calculateGrowthStage(updated);
+        if (newGrowth.stage > oldGrowth.stage) {
+          state.recentlyAdvancedHabitId = habitId;
+          showAlert(`🌱 "${updated.name}" sprouted to Stage ${newGrowth.stage}: ${newGrowth.name}!`);
+        }
+      }
+
       renderAll();
     } catch (e) {
       console.error('Error toggling habit:', e);
@@ -383,73 +427,71 @@
     }
   }
 
-  // Pre-seed sample habits matching the user's mockup if database is empty
+  // Sample habits matching reference mockup, with realistic completion history
   async function seedMockupHabitsIfEmpty() {
     if (state.habits.length > 0) return;
+
+    // Helper to generate an array of past completion dates
+    const makeCompletions = (count, recentDays) => {
+      const dates = [];
+      // Lifetime historical completions for growth stages
+      for (let i = 0; i < count; i++) {
+        dates.push(Dates.addDays(state.todayDate, -(i + 3)));
+      }
+      // Recent days for streak and 7-day ring
+      if (Array.isArray(recentDays)) {
+        recentDays.forEach((offset) => {
+          dates.push(Dates.addDays(state.todayDate, offset));
+        });
+      }
+      return [...new Set(dates)];
+    };
 
     const sampleHabits = [
       {
         name: 'Read',
         type: 'daily',
-        icon: 'book',
-        completedDates: [
-          Dates.addDays(state.todayDate, -3),
-          Dates.addDays(state.todayDate, -2),
-          Dates.addDays(state.todayDate, -1),
-          state.todayDate,
-        ],
+        // 18 completions -> Stage 5 (Mature Plant), 4-day streak (days -3, -2, -1, 0)
+        completedDates: makeCompletions(14, [-3, -2, -1, 0]),
       },
       {
         name: 'Workout',
         type: 'daily',
-        icon: 'dumbbell',
-        completedDates: [
-          Dates.addDays(state.todayDate, -3),
-          Dates.addDays(state.todayDate, -2),
-          state.todayDate,
-        ],
+        // 10 completions -> Stage 4 (Growing Plant), 4-day streak (days -3, -2, -1, 0)
+        completedDates: makeCompletions(6, [-3, -2, -1, 0]),
       },
       {
         name: 'Journal',
         type: 'daily',
-        icon: 'journal',
-        completedDates: [
-          Dates.addDays(state.todayDate, -3),
-          Dates.addDays(state.todayDate, -2),
-        ],
+        // 5 completions -> Stage 3 (Sprout), 2-day streak (days -3, -2)
+        completedDates: makeCompletions(3, [-3, -2]),
       },
       {
         name: 'Drink Water',
         type: 'daily',
-        icon: 'water',
-        completedDates: [
-          Dates.addDays(state.todayDate, -4),
-          Dates.addDays(state.todayDate, -3),
-          Dates.addDays(state.todayDate, -2),
-          Dates.addDays(state.todayDate, -1),
-          state.todayDate,
-        ],
+        // 30 completions -> Stage 6 (Bloom 🌸!), 19-day streak
+        completedDates: makeCompletions(26, [-4, -3, -2, -1, 0]),
       },
       {
         name: 'Deep Clean Room',
         type: 'weekly',
-        icon: 'clean',
         dueDays: [6], // Saturday
-        completedDates: [],
+        // 2 completions -> Stage 2 (Germinating seed)
+        completedDates: makeCompletions(2, []),
       },
       {
         name: 'Meal Prep',
         type: 'weekly',
-        icon: 'meal',
         dueDays: [0], // Sunday
-        completedDates: [state.todayDate],
+        // 8 completions -> Stage 4 (Growing plant)
+        completedDates: makeCompletions(7, [0]),
       },
       {
         name: 'Plan Next Week',
         type: 'weekly',
-        icon: 'plan',
         dueDays: [0], // Sunday
-        completedDates: [],
+        // 1 completion -> Stage 2 (Germinating seed)
+        completedDates: makeCompletions(1, []),
       },
     ];
 
@@ -465,32 +507,12 @@
   }
 
   // ==========================================================================
-  // 6. MODAL: ADD / EDIT HABIT
+  // 6. MODAL: ADD / EDIT HABIT (Every habit starts as a seed Stage 1 🌱)
   // ==========================================================================
   function openHabitModal(habitToEdit = null, defaultType = 'daily') {
     dom.habitModal.classList.remove('hidden');
     dom.modalNameError.classList.add('hidden');
     dom.modalDaysError.classList.add('hidden');
-
-    // Populate Icon Picker
-    const availableIcons = Icons.getAvailableHabitIcons();
-    dom.iconPickerGrid.innerHTML = '';
-    const selectedIcon = habitToEdit ? habitToEdit.icon || 'book' : 'book';
-    dom.modalSelectedIcon.value = selectedIcon;
-
-    availableIcons.forEach((item) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = `icon-pick-btn ${item.id === selectedIcon ? 'selected' : ''}`;
-      btn.innerHTML = Icons.getIcon(item.id);
-      btn.title = item.label;
-      btn.addEventListener('click', () => {
-        dom.iconPickerGrid.querySelectorAll('.icon-pick-btn').forEach((b) => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        dom.modalSelectedIcon.value = item.id;
-      });
-      dom.iconPickerGrid.appendChild(btn);
-    });
 
     if (habitToEdit) {
       dom.modalTitle.textContent = 'Edit Habit';
@@ -507,7 +529,7 @@
         p.classList.toggle('selected', dueDays.includes(Number(p.dataset.day)));
       });
     } else {
-      dom.modalTitle.textContent = 'New Habit';
+      dom.modalTitle.textContent = 'Plant New Habit 🌱';
       dom.modalHabitId.value = '';
       dom.modalHabitName.value = '';
       dom.modalHabitDesc.value = '';
@@ -542,7 +564,6 @@
     const description = dom.modalHabitDesc.value.trim();
     const id = dom.modalHabitId.value;
     const type = document.querySelector('input[name="habit-type"]:checked').value;
-    const icon = dom.modalSelectedIcon.value || 'book';
 
     if (!name) {
       dom.modalNameError.textContent = 'Habit name is required.';
@@ -562,14 +583,22 @@
 
     try {
       if (id) {
-        const updated = await Storage.updateHabit(id, { name, description, type, icon, dueDays });
+        // Edit existing habit (preserves plant growth stage and completions)
+        const updated = await Storage.updateHabit(id, { name, description, type, dueDays });
         const idx = state.habits.findIndex((h) => h._id === id);
         if (idx !== -1) state.habits[idx] = updated;
         showAlert(`"${name}" updated.`);
       } else {
-        const created = await Storage.createHabit({ name, description, type, icon, dueDays });
+        // Create new habit — starts at Stage 1: Seed 🌱
+        const created = await Storage.createHabit({
+          name,
+          description,
+          type,
+          dueDays,
+          completedDates: [],
+        });
         state.habits.push(created);
-        showAlert(`"${name}" added to Rootine! 🌱`);
+        showAlert(`"${name}" planted as a new seed! 🌱`);
       }
       closeHabitModal();
       renderAll();
